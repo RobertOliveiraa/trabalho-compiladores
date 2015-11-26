@@ -1,6 +1,7 @@
 <?php
 /**
  * @author Elynton Fellipe Bazzo
+ * @author Andrei Siqueira
  */
 class TokenReader extends Parser
 {
@@ -124,7 +125,7 @@ class TokenReader extends Parser
         $unary = -$unary;
       }
 
-      $xs[]     = ["operator" => Tokenizer::$token_names[$operator], "operand" => $factor];
+      $xs[] = ["operator" => Tokenizer::$token_names[$operator], "operand" => $factor];
     }
 
     return empty($xs)

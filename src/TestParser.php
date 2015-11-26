@@ -1,6 +1,7 @@
 <?php
 /**
  * @author Elynton Fellipe Bazzo
+ * @author Andrei Siqueira
  */
 require_once 'Lexer.php';
 require_once 'Parser.php';
@@ -11,7 +12,7 @@ require_once 'LexerError.php';
 require_once 'ParserError.php';
 
 $source = <<<END
-  -(3) / -(-2);
+  -(3) / -10;
 END
 ;
 

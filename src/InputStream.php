@@ -1,7 +1,16 @@
 <?php
 /**
  * @author Elynton Fellipe Bazzo
+ * @author Andrey Siqueira
  */
+require_once 'Lexer.php';
+require_once 'Parser.php';
+require_once 'Tokenizer.php';
+require_once 'TokenReader.php';
+require_once 'Token.php';
+require_once 'LexerError.php';
+require_once 'ParserError.php';
+
 class InputStream
 {
   const TYPE_FILE     = 0x0;
@@ -15,7 +24,7 @@ class InputStream
 
   public function __construct($source, $options)
   {
-    $this->options = [];
+    $this->options = $options;
 
     switch ($options["type"]) {
       case self::TYPE_FILE:
@@ -44,12 +53,43 @@ class InputStream
 
   private function text()
   {
-    var_dump($this->source);
+    switch ($this->options["method"]) {
+      case InputStream::METHOD_TOKEN:
+        $this->token();
+        break;
+      case InputStream::METHOD_TREE:
+        $this->tree();
+        break;
+      default:
+        echo ">>> Especifique um método válido (METHOD_TREE, METHOD_TOKEN)";
+        exit;
+    }
+  }
+
+  private function token()
+  {
+    try {
+      $lexer = new Tokenizer($this->source);
+      $token = $lexer->nextToken();
+
+      while ($token->key !== Tokenizer::EOF_TYPE) {
+        echo $token;
+        $token = $lexer->nextToken();
+      }
+    } catch (LexerError $e) {
+      echo $e->getMessage();
+    }
+  }
+
+  private function tree()
+  {
+    try {
+      $lexer = new Tokenizer($this->source);
+      $parser = new TokenReader($lexer);
+      $parser->arithmetic();
+      $parser->printExpressionTree();
+    } catch (Exception $e) {
+      echo $e->getMessage();
+    }
   }
 }
-
-
-$stream = new InputStream("1 * 2 - 4 + -(-3 * 8)", [
-  "type"   => InputStream::TYPE_TEXT,
-  "method" => InputStream::METHOD_TREE
-]);

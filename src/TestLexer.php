@@ -1,6 +1,7 @@
 <?php
 /**
  * @author Elynton Fellipe Bazzo
+ * @author Andrei Siqueira
  */
 require_once 'Lexer.php';
 require_once 'Tokenizer.php';
@@ -9,7 +10,7 @@ require_once 'LexerError.php';
 
 $source = <<<END
   1 + 1 / 2.3;
-  2.3 * (4) - 2
+  2.3 * -(4) - 2;
 END
 ;
 

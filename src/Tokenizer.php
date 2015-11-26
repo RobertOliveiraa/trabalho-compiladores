@@ -1,6 +1,7 @@
 <?php
 /**
  * @author Elynton Fellipe Bazzo
+ * @author Andrei Siqueira
  */
 class Tokenizer extends Lexer
 {
