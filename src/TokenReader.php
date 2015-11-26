@@ -4,7 +4,7 @@
  */
 class TokenReader extends Parser
 {
-  private $expression_stack = [];
+  private $expression_tree = [];
 
   public function __construct(Tokenizer $source)
   {
@@ -16,9 +16,11 @@ class TokenReader extends Parser
     $lookahead = &$this->lookahead;
 
     while ($lookahead->key !== Tokenizer::EOF_TYPE) {
-      $expression_stack[] = $this->expr();
+      $expression_tree[] = $this->expr();
       $this->match(Tokenizer::T_SEMICOLON);
     }
+
+    var_dump($expression_tree);
   }
 
   private function isSecondaryOperator()
@@ -35,7 +37,18 @@ class TokenReader extends Parser
 
   public function digit()
   {
-    return $this->match(Tokenizer::T_INTEGER, Tokenizer::T_DOUBLE);
+    $unary = NULL;
+    if ($this->isSecondaryOperator()) {
+      $unary = $this->secondaryOperator();
+    }
+
+    $number = $this->match(Tokenizer::T_INTEGER, Tokenizer::T_DOUBLE);
+
+    return $unary === NULL
+      ? $number
+      : ($unary === Tokenizer::T_MINUS
+        ? -$number
+        : $number);
   }
 
   public function primaryOperator()
@@ -56,7 +69,12 @@ class TokenReader extends Parser
     while ($this->isSecondaryOperator()) {
       $operator = $this->secondaryOperator();
       $term     = $this->term();
+      $xs[] = ["operator" => Tokenizer::$token_names[$operator], "operand" => $term];
     }
+
+    return empty($xs)
+      ? $x
+      : ["left" => $x, "right" => $xs];
   }
 
   public function term()
@@ -67,9 +85,12 @@ class TokenReader extends Parser
     while ($this->isPrimaryOperator()) {
       $operator = $this->primaryOperator();
       $factor   = $this->factor();
+      $xs[]     = ["operator" => Tokenizer::$token_names[$operator], "operand" => $factor];
     }
 
-    // return
+    return empty($xs)
+      ? $x
+      : ["left" => $x, "right" => $xs];
   }
 
   public function factor()

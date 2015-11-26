@@ -11,7 +11,7 @@ require_once 'LexerError.php';
 require_once 'ParserError.php';
 
 $source = <<<END
-  1 + 2 * (3 - 4 / 12);
+  1 + 2 + 3;
 END
 ;
 
