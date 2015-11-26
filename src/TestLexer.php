@@ -8,7 +8,7 @@ require_once 'Token.php';
 require_once 'LexerError.php';
 
 try {
-  $lexer = new Tokenizer("   1+    1 * (3 - 2)/  10 num 6");
+  $lexer = new Tokenizer("   1.4+    1 * (3 - 2)/  10 num 6");
   $token = $lexer->nextToken();
 
   while ($token->key !== Tokenizer::EOF_TYPE) {

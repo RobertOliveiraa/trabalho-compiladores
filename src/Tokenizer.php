@@ -19,7 +19,7 @@ class Tokenizer extends Lexer
   public $column = 0;
 
   static $token_names = [
-    'n/a', '<EOF>', 'T_DOUBLE', 'T_SEMICOLON', 'T_IDENTIFIER'
+    'n/a', '<EOF>', 'T_INTEGER', 'T_DOUBLE', 'T_SEMICOLON', 'T_IDENTIFIER'
   , 'T_LPAREN', 'T_RPAREN', 'T_PLUS', 'T_MINUS', 'T_DIVISION'
   , 'T_MULTIPLICATION'
   ];
@@ -41,6 +41,18 @@ class Tokenizer extends Lexer
         case PHP_EOL:
           $this->skipBlank();
           continue;
+        case "+":
+          $this->consume();
+          return new Token(self::T_PLUS);
+        case "-":
+          $this->consume();
+          return new Token(self::T_MINUS);
+        case "*":
+          $this->consume();
+          return new Token(self::T_MULTIPLICATION);
+        case "/":
+          $this->consume();
+          return new Token(self::T_DIVISION);
         default:
           if (ctype_digit($this->char)) {
             return $this->digit();
@@ -79,6 +91,27 @@ class Tokenizer extends Lexer
 
   private function digit()
   {
+    $buffer = $this->char;
+    $this->consume();
+    $type = 'integer';
+
+
+    hold_number:
+      while (ctype_digit($this->char)) {
+        $buffer .= $this->char;
+        $this->consume();
+      }
+
+    if ($type !== 'double' && $this->char === ".") {
+      $type = 'double';
+      $buffer .= ".";
+      $this->consume();
+      goto hold_number;
+    }
+
+    return $type === 'integer'
+      ? new Token(self::T_INTEGER, (int) $buffer)
+      : new Token(self::T_DOUBLE, (double) $buffer);
 
   }
 }
