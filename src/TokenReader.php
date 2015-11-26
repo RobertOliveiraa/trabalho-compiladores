@@ -64,12 +64,37 @@ class TokenReader extends Parser
 
   public function expr()
   {
-    $x  = $this->term();
+    $unary = NULL;
+    if ($this->isSecondaryOperator()) {
+      $unary = $this->secondaryOperator();
+    }
+
+    $x = $this->term();
+
+    if ($unary !== NULL && $unary === Tokenizer::T_MINUS) {
+      if (is_array($x)) {
+        $x["left"] = -$x["left"];
+      } else {
+        $x = -$x;
+      }
+    }
+
     $xs = [];
 
     while ($this->isSecondaryOperator()) {
+      $unary    = NULL;
       $operator = $this->secondaryOperator();
-      $term     = $this->term();
+
+      if ($this->isSecondaryOperator()) {
+        $unary = $this->secondaryOperator();
+      }
+
+      $term = $this->term();
+
+      if ($unary !== NULL && $unary === Tokenizer::T_MINUS) {
+        $term = -$term;
+      }
+
       $xs[] = ["operator" => Tokenizer::$token_names[$operator], "operand" => $term];
     }
 
@@ -80,12 +105,25 @@ class TokenReader extends Parser
 
   public function term()
   {
+
+
     $x  = $this->factor();
     $xs = [];
 
     while ($this->isPrimaryOperator()) {
+      $unary    = NULL;
       $operator = $this->primaryOperator();
+
+      if ($this->isSecondaryOperator()) {
+        $unary = $this->secondaryOperator();
+      }
+
       $factor   = $this->factor();
+
+      if ($unary !== NULL && $unary === Tokenizer::T_MINUS) {
+        $unary = -$unary;
+      }
+
       $xs[]     = ["operator" => Tokenizer::$token_names[$operator], "operand" => $factor];
     }
 
