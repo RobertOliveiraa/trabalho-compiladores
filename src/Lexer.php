@@ -10,14 +10,18 @@ abstract class Lexer
   public $input;
   public $position = 0;
   public $char;
-
-  private $size;
+  public $size;
 
   public function __construct($input)
   {
     $this->input = $input;
-    $this->char  = $input[$this->position];
-    $this->size = strlen($this->input);
+    $this->size  = strlen($this->input);
+
+    if ($this->size === 0) {
+      return new Token(self::EOF_TYPE, NULL, 0, 0);
+    }
+
+    $this->char = $input[$this->position];
   }
 
   protected function isEnd()

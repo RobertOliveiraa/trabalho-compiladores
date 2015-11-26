@@ -31,6 +31,10 @@ class Tokenizer extends Lexer
 
   public function nextToken()
   {
+    if ($this->size === 0) {
+      return new Token(self::EOF_TYPE, NULL, 0, 0);
+    }
+
     while ($this->char != self::EOF) {
       switch ($this->char) {
         case " ":
@@ -59,6 +63,9 @@ class Tokenizer extends Lexer
         case ")":
           $this->consume();
           return new Token(self::T_RPAREN, NULL, $this->line, $this->column);
+        case ";":
+          $this->consume();
+          return new Token(self::T_SEMICOLON, NULL, $this->line, $this->column);
         default:
           if (ctype_digit($this->char)) {
             return $this->digit();
@@ -90,6 +97,7 @@ class Tokenizer extends Lexer
         case PHP_EOL:
           $this->line++;
           $this->column = 0;
+          $this->consume();
           break;
         default:
           $this->column++;
