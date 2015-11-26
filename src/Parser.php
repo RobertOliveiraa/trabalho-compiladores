@@ -1,5 +1,7 @@
 <?php
 /**
+ * Gramática de referência:
+ * @link {http://karmin.ch/ebnf/examples}
  * @author Elynton Fellipe Bazzo
  */
 abstract class Parser

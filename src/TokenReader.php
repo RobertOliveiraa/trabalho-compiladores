@@ -4,6 +4,8 @@
  */
 class TokenReader extends Parser
 {
+  private $expression_stack = [];
+
   public function __construct(Tokenizer $source)
   {
     parent::__construct($source);
@@ -11,21 +13,11 @@ class TokenReader extends Parser
 
   public function arithmetic()
   {
-    $lookahead = $this->lookahead;
-    $this->expr();
-    $this->match(Tokenizer::T_SEMICOLON);
-  }
+    $lookahead = &$this->lookahead;
 
-  private function isOperator()
-  {
-    switch ($this->lookahead->key) {
-      case Tokenizer::T_PLUS:
-      case Tokenizer::T_MINUS:
-      case Tokenizer::T_DIVISION:
-      case Tokenizer::T_MULTIPLICATION:
-        return true;
-      default:
-        return false;
+    while ($lookahead->key !== Tokenizer::EOF_TYPE) {
+      $expression_stack[] = $this->expr();
+      $this->match(Tokenizer::T_SEMICOLON);
     }
   }
 
@@ -93,11 +85,3 @@ class TokenReader extends Parser
     return $factor;
   }
 }
-
-/*
-expression = term  { ("+" | "-") term} .
-term       = factor  { ("*"|"/") factor} .
-factor     = constant | "("  expression  ")" .
-constant   = digit {digit} .
-digit      = "0" | "1" | "..." | "9" .
-*/
