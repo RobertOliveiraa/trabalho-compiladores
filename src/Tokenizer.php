@@ -15,7 +15,7 @@ class Tokenizer extends Lexer
   const T_DIVISION       = 10;
   const T_MULTIPLICATION = 11;
 
-  public $line = 0;
+  public $line = 1;
   public $column = 0;
 
   static $token_names = [
@@ -46,25 +46,25 @@ class Tokenizer extends Lexer
           $this->skipBlank();
           continue;
         case "+":
-          $this->consume();
+          $this->consume(); $this->column++;
           return new Token(self::T_PLUS, NULL, $this->line, $this->column);
         case "-":
-          $this->consume();
+          $this->consume(); $this->column++;
           return new Token(self::T_MINUS, NULL, $this->line, $this->column);
         case "*":
-          $this->consume();
+          $this->consume(); $this->column++;
           return new Token(self::T_MULTIPLICATION, NULL, $this->line, $this->column);
         case "/":
-          $this->consume();
+          $this->consume(); $this->column++;
           return new Token(self::T_DIVISION, NULL, $this->line, $this->column);
         case "(":
-          $this->consume();
+          $this->consume(); $this->column++;
           return new Token(self::T_LPAREN, NULL, $this->line, $this->column);
         case ")":
-          $this->consume();
+          $this->consume(); $this->column++;
           return new Token(self::T_RPAREN, NULL, $this->line, $this->column);
         case ";":
-          $this->consume();
+          $this->consume(); $this->column++;
           return new Token(self::T_SEMICOLON, NULL, $this->line, $this->column);
         default:
           if (ctype_digit($this->char)) {
@@ -129,6 +129,8 @@ class Tokenizer extends Lexer
 
     $buffer = implode($buffer);
 
+    $this->column += sizeof($buffer);
+
     return $type === 'integer'
       ? new Token(self::T_INTEGER, (int) $buffer, $this->line, $this->column)
       : new Token(self::T_DOUBLE, (double) $buffer, $this->line, $this->column);
@@ -146,6 +148,8 @@ class Tokenizer extends Lexer
     }
 
     $buffer = implode($buffer);
+
+    $this->column += sizeof($buffer);
 
     return new Token(self::T_IDENTIFIER, $buffer, $this->line, $this->column);
     exit;
