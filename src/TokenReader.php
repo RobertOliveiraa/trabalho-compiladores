@@ -13,14 +13,15 @@ class TokenReader extends Parser
 
   public function arithmetic()
   {
-    $lookahead = &$this->lookahead;
-
-    while ($lookahead->key !== Tokenizer::EOF_TYPE) {
-      $expression_tree[] = $this->expr();
+    while ($this->lookahead->key !== Tokenizer::EOF_TYPE) {
+      $this->expression_tree[] = $this->expr();
       $this->match(Tokenizer::T_SEMICOLON);
     }
+  }
 
-    var_dump($expression_tree);
+  public function printExpressionTree()
+  {
+    var_dump($this->expression_tree);
   }
 
   private function isSecondaryOperator()

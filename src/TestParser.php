@@ -12,6 +12,7 @@ require_once 'ParserError.php';
 
 $source = <<<END
   1 + 2 + 3;
+  1 + 1 * (-3);
 END
 ;
 
@@ -19,6 +20,7 @@ try {
   $lexer = new Tokenizer($source);
   $parser = new TokenReader($lexer);
   $parser->arithmetic();
+  $parser->printExpressionTree();
 } catch (Exception $e) {
   echo $e->getMessage();
 }
