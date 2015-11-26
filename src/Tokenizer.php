@@ -43,19 +43,29 @@ class Tokenizer extends Lexer
           continue;
         case "+":
           $this->consume();
-          return new Token(self::T_PLUS);
+          return new Token(self::T_PLUS, NULL, $this->line, $this->column);
         case "-":
           $this->consume();
-          return new Token(self::T_MINUS);
+          return new Token(self::T_MINUS, NULL, $this->line, $this->column);
         case "*":
           $this->consume();
-          return new Token(self::T_MULTIPLICATION);
+          return new Token(self::T_MULTIPLICATION, NULL, $this->line, $this->column);
         case "/":
           $this->consume();
-          return new Token(self::T_DIVISION);
+          return new Token(self::T_DIVISION, NULL, $this->line, $this->column);
+        case "(":
+          $this->consume();
+          return new Token(self::T_LPAREN, NULL, $this->line, $this->column);
+        case ")":
+          $this->consume();
+          return new Token(self::T_RPAREN, NULL, $this->line, $this->column);
         default:
           if (ctype_digit($this->char)) {
             return $this->digit();
+          }
+
+          if (ctype_alpha($this->char)) {
+            return $this->identifier();
           }
 
           throw new LexerError("Caractere inesperado: {$this->char}", $this->line, $this->column);
@@ -91,27 +101,45 @@ class Tokenizer extends Lexer
 
   private function digit()
   {
-    $buffer = $this->char;
+    $buffer = [$this->char];
     $this->consume();
     $type = 'integer';
 
 
     hold_number:
       while (ctype_digit($this->char)) {
-        $buffer .= $this->char;
+        $buffer[] = $this->char;
         $this->consume();
       }
 
     if ($type !== 'double' && $this->char === ".") {
       $type = 'double';
-      $buffer .= ".";
+      $buffer[] = ".";
       $this->consume();
       goto hold_number;
     }
 
-    return $type === 'integer'
-      ? new Token(self::T_INTEGER, (int) $buffer)
-      : new Token(self::T_DOUBLE, (double) $buffer);
+    $buffer = implode($buffer);
 
+    return $type === 'integer'
+      ? new Token(self::T_INTEGER, (int) $buffer, $this->line, $this->column)
+      : new Token(self::T_DOUBLE, (double) $buffer, $this->line, $this->column);
+
+  }
+
+  private function identifier()
+  {
+    $buffer = [$this->char];
+    $this->consume();
+
+    while (ctype_alpha($this->char)) {
+      $buffer[] = $this->char;
+      $this->consume();
+    }
+
+    $buffer = implode($buffer);
+
+    return new Token(self::T_IDENTIFIER, $buffer, $this->line, $this->column);
+    exit;
   }
 }
