@@ -32,19 +32,23 @@ Exemplos de uso:
 #### Lexer
 
 `php Compiler.php -l -t "1 + 1 - 2 * 3"`
+
 ![lexer_1](./examples/lexer_1.png)
 
 
 
 `php Compiler.php -l -t "1 & 2 / 3;"`
+
 ![lexer_2](./examples/lexer_2.png)
 
 #### Parser
 
 `php Compiler.php -p -t "1 + 2 * (3 - 4) - 8 / 2"`
+
 ![parser_1](./examples/parser_1.png)
 
 `php Compiler.php -p -t "1 + 2 * (3 - 4) - -8 / 2; 1 * (30 + (20))"`
+
 ![parser_2](./examples/parser_2.png)
 
 
@@ -144,4 +148,5 @@ array(2) {
 ```
 
 `php Compiler.php -p -t "1 +* 4;"`
+
 ![parser_4](./examples/parser_4.png)
