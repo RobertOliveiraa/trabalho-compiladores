@@ -16,9 +16,11 @@ class Tokenizer extends Lexer
   const T_DIVISION       = 10;
   const T_MULTIPLICATION = 11;
 
+  // Linha e coluna inicial
   public $line = 1;
   public $column = 0;
 
+  // Nomes dos tokens de acordo com o índice das constantes
   static $token_names = [
     'n/a', '<EOF>', 'T_INTEGER', 'T_DOUBLE', 'T_SEMICOLON', 'T_IDENTIFIER'
   , 'T_LPAREN', 'T_RPAREN', 'T_PLUS', 'T_MINUS', 'T_DIVISION'
@@ -30,6 +32,8 @@ class Tokenizer extends Lexer
     parent::__construct($input);
   }
 
+  // Enquanto não chegarmos ao fim do arquivo, vamos analisando caractere por
+  // caractere, consumindo e retornando tokens, como generators
   public function nextToken()
   {
     if ($this->size === 0) {
@@ -90,6 +94,7 @@ class Tokenizer extends Lexer
 
   private function skipBlank()
   {
+    // Quando alcançarmos uma quebra de linha, adicionamos +1 no nosso contador
     while (ctype_space($this->char)) {
       switch ($this->char) {
         case "\r\n":
@@ -110,6 +115,8 @@ class Tokenizer extends Lexer
 
   private function digit()
   {
+    // Casamos números de ponto flutuante e inteiros. Adicionamos o tamanho do
+    // buffer ao número de colunas.
     $buffer = [$this->char];
     $this->consume();
     $type = 'integer';
@@ -128,6 +135,8 @@ class Tokenizer extends Lexer
       goto hold_number;
     }
 
+    // Juntamos os itens do array em uma string, por otimização. Strings
+    // tem alto custo de concatenação
     $buffer = implode($buffer);
 
     $this->column += sizeof($buffer);
@@ -140,6 +149,8 @@ class Tokenizer extends Lexer
 
   private function identifier()
   {
+    // Casamos identificadores e armazenamos em um buffer, somente por questão
+    // de dar melhores mensagens de erro
     $buffer = [$this->char];
     $this->consume();
 

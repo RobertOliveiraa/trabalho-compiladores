@@ -17,6 +17,8 @@ END
 ;
 
 try {
+  // Instanciamos o lexer e o parser, fazemos a análise aritmética e
+  // imprimimos a árvore gerada
   $lexer = new Tokenizer($source);
   $parser = new TokenReader($lexer);
   $parser->arithmetic();

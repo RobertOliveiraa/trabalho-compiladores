@@ -11,6 +11,8 @@ require_once 'Token.php';
 require_once 'LexerError.php';
 require_once 'ParserError.php';
 
+// Moldamos a entrada de dados. Transformamos a entrada do usuário e repassamos
+// ao lexer ou ao lexer -> parser.
 class InputStream
 {
   const TYPE_FILE     = 0x0;

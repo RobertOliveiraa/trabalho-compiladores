@@ -5,9 +5,11 @@
  */
 require_once 'InputStream.php';
 
+// Recebemos os parâmetros do usuário e removemos o nome do programa
 $args = $argv;
 array_shift($args);
 
+// Capturamos o tipo de entrada do programador
 $type = @$args[1] === '-f' ? InputStream::TYPE_FILE : InputStream::TYPE_TEXT;
 
 switch (@$args[0]) {
@@ -21,6 +23,7 @@ switch (@$args[0]) {
     help();
 }
 
+// Quando vier um comando inválido, mostramos a ajuda
 function help()
 {
   echo <<<END
@@ -39,6 +42,7 @@ END
 exit;
 }
 
+// Ações para o parser
 function parser()
 {
   global $args, $type;
@@ -48,6 +52,7 @@ function parser()
   ]);
 }
 
+// Ações para o lexer
 function lexer()
 {
   global $args, $type;

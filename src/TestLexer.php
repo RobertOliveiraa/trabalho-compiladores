@@ -15,9 +15,14 @@ END
 ;
 
 try {
+  // Instanciamos o lexer
   $lexer = new Tokenizer($source);
+  // Começamos pedindo o primeiro token
   $token = $lexer->nextToken();
 
+  // Enquanto houver tokens, vamos imprimindo
+  // Não criamos uma tabela de símbolos porque não faria sentido se ela não
+  // teria uma saída
   while ($token->key !== Tokenizer::EOF_TYPE) {
     echo $token;
     $token = $lexer->nextToken();

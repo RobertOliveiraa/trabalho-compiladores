@@ -14,6 +14,12 @@ class TokenReader extends Parser
 
   public function arithmetic()
   {
+    // Aceitamos várias <expr>; <expr>; ...
+    // Usamos um predictive top down recursive descent parser para fazer a
+    // análise semântica e, sem recursividade à esquerda, trabalhar na
+    // precedência dos operadores. Tivemos, como custo, dificuldade na geração
+    // da AST com operadores binários seguindo a notação polonesa, mas tivemos
+    // facilidade, como teríamos em uma PEG.
     while ($this->lookahead->key !== Tokenizer::EOF_TYPE) {
       $this->expression_tree[] = $this->expr();
       $this->match(Tokenizer::T_SEMICOLON);
@@ -121,6 +127,7 @@ class TokenReader extends Parser
 
       $factor   = $this->factor();
 
+      // Quando houver operador unário negativo, modificamos o valor computado
       if ($unary !== NULL && $unary === Tokenizer::T_MINUS) {
         $unary = -$unary;
       }

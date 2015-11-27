@@ -17,6 +17,8 @@ abstract class Parser
 
   public function match()
   {
+    // Casamos um token. Essa função é variádica. Pode receber múltiplos
+    // parâmetros. Damos mensagens de erro concisas, caso falhe.
     $args = func_get_args();
     foreach ($args as $arg) {
       if ($this->lookahead->key === $arg) {
@@ -44,6 +46,7 @@ abstract class Parser
 
   public function consume()
   {
+    // Consumimos um token
     $this->lookahead = $this->source->nextToken();
   }
 }
