@@ -30,11 +30,117 @@ Exemplos de uso:
 ### Exemplos de uso
 
 #### Lexer
+
 `php Compiler.php -l -t "1 + 1 - 2 * 3"`
 ![lexer_1](./examples/lexer_1.png)
 
 
 `php Compiler.php -l -t "1 & 2 / 3;"`
-![lexer_2](./examples/lexer_1.png)
+![lexer_2](./examples/lexer_2.png)
 
 #### Parser
+
+`php Compiler.php -p -t "1 + 2 * (3 - 4) - 8 / 2"`
+![parser_1](./examples/parser_1.png)
+
+`php Compiler.php -p -t "1 + 2 * (3 - 4) - -8 / 2; 1 * (30 + (20))"`
+![parser_2](./examples/parser_2.png)
+
+
+**Saída representada da árvore**:
+```js
+array(2) {
+  [0]=>
+  array(2) {
+    ["left"]=>
+    int(1)
+    ["right"]=>
+    array(2) {
+      [0]=>
+      array(2) {
+        ["operator"]=>
+        string(6) "T_PLUS"
+        ["operand"]=>
+        array(2) {
+          ["left"]=>
+          int(2)
+          ["right"]=>
+          array(1) {
+            [0]=>
+            array(2) {
+              ["operator"]=>
+              string(16) "T_MULTIPLICATION"
+              ["operand"]=>
+              array(2) {
+                ["left"]=>
+                int(3)
+                ["right"]=>
+                array(1) {
+                  [0]=>
+                  array(2) {
+                    ["operator"]=>
+                    string(7) "T_MINUS"
+                    ["operand"]=>
+                    int(4)
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      [1]=>
+      array(2) {
+        ["operator"]=>
+        string(7) "T_MINUS"
+        ["operand"]=>
+        array(2) {
+          ["left"]=>
+          int(8)
+          ["right"]=>
+          array(1) {
+            [0]=>
+            array(2) {
+              ["operator"]=>
+              string(10) "T_DIVISION"
+              ["operand"]=>
+              int(2)
+            }
+          }
+        }
+      }
+    }
+  }
+  [1]=>
+  array(2) {
+    ["left"]=>
+    int(1)
+    ["right"]=>
+    array(1) {
+      [0]=>
+      array(2) {
+        ["operator"]=>
+        string(16) "T_MULTIPLICATION"
+        ["operand"]=>
+        array(2) {
+          ["left"]=>
+          int(30)
+          ["right"]=>
+          array(1) {
+            [0]=>
+            array(2) {
+              ["operator"]=>
+              string(6) "T_PLUS"
+              ["operand"]=>
+              int(20)
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+`php Compiler.php -p -t "1 +* 4;"`
+![parser_4](./examples/parser_4.png)
