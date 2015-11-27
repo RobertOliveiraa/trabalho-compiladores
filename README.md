@@ -35,6 +35,7 @@ Exemplos de uso:
 ![lexer_1](./examples/lexer_1.png)
 
 
+
 `php Compiler.php -l -t "1 & 2 / 3;"`
 ![lexer_2](./examples/lexer_2.png)
 
