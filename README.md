@@ -47,7 +47,7 @@ Exemplos de uso:
 
 ![parser_1](./examples/parser_1.png)
 
-`php Compiler.php -p -t "1 + 2 * (3 - 4) - -8 / 2; 1 * (30 + (20))"`
+`php Compiler.php -p -t "1 + 2 * (3 - 4) - -8 / 2; 1 * (30 + (20));"`
 
 ![parser_2](./examples/parser_2.png)
 
